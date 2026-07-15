@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Peserta - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Peserta</p>
+            <h1>Halo, {{ current_user.name }}</h1>
+        </div>
+        <a class="button button-primary" href="{{ url_for('participant_attendance') }}">Presensi sekarang</a>
+    </div>
+
+    <div class="stats-grid">
+        <article class="stat-card">
+            <span>Total presensi</span>
+            <strong>{{ attendance_count }}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Data wajah</span>
+            <strong>{{ 'Aktif' if current_user.face_profile else 'Belum' }}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Sesi tersedia</span>
+            <strong>{{ available_sessions|length }}</strong>
+        </article>
+    </div>
+
+    <section class="content-section">
+        <div class="section-heading">
+            <h2>Sesi dibuka</h2>
+            <a href="{{ url_for('participant_face') }}">Kelola wajah</a>
+        </div>
+        {% if available_sessions %}
+            <div class="session-list">
+                {% for session in available_sessions %}
+                    <article class="session-card">
+
+                        <span class="status-pill open">
+                            Dibuka
+                        </span>
+
+                        <h3>{{ session.title }}</h3>
+
+                        <p>
+                            <strong>Kelas:</strong>
+                            {{ session.class_name or 'Tanpa kelas' }}
+                        </p>
+
+                        {% if session.location %}
+                        <p>
+                            <strong>Lokasi:</strong>
+                            {{ session.location }}
+                        </p>
+                        {% endif %}
+
+                        <p>
+                            <strong>Mulai:</strong>
+                            {{ session.start_time|datetime_id }}
+                        </p>
+
+                        <p>
+                            <strong>Selesai:</strong>
+                            {{ session.end_time|datetime_id }}
+                        </p>
+
+                        {% if session.description %}
+                        <p class="session-description">
+                            <strong>Catatan:</strong>
+                            {{ session.description }}
+                        </p>
+                        {% endif %}
+
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">Belum ada sesi presensi yang dibuka.</div>
+        {% endif %}
+    </section>
+</section>
+{% endblock %}

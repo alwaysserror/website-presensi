@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Presensi Face - Absensi Wajah{% endblock %}
+{% block body_class %}landing-page{% endblock %}
+
+{% block content %}
+<section class="landing-hero">
+    <div class="hero-media">
+        <img src="{{ url_for('static', filename='img/landing-hero.png') }}" alt="Presensi wajah di ruang kelas">
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1>Presensi Face</h1>
+        <p class="hero-copy">Pilih akses sesuai peran, buka sesi presensi, lalu peserta melakukan check-in menggunakan wajah.</p>
+        <div class="hero-actions">
+            <a class="button button-primary" href="{{ url_for('login', role='peserta') }}">Masuk Peserta</a>
+            <a class="button button-secondary" href="{{ url_for('login', role='pengajar') }}">Masuk Pengajar</a>
+        </div>
+        <a class="admin-entry" href="{{ url_for('login', role='admin') }}">Akses admin</a>
+    </div>
+</section>
+
+<section class="role-strip">
+    <article class="role-card">
+        <span class="role-badge">Peserta</span>
+        <h2>Presensi dengan wajah</h2>
+        <p>Daftarkan wajah, lakukan presensi saat sesi dibuka, dan lihat riwayat kehadiran.</p>
+        <a href="{{ url_for('register', role='peserta') }}">Daftar peserta</a>
+    </article>
+    <article class="role-card">
+        <span class="role-badge alt">Pengajar</span>
+        <h2>Kelola sesi presensi</h2>
+        <p>Buat, ubah, tutup, hapus sesi, dan lihat peserta yang hadir pada setiap sesi.</p>
+        <a href="{{ url_for('register', role='pengajar') }}">Daftar pengajar</a>
+    </article>
+</section>
+{% endblock %}

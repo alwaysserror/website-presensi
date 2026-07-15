@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Login {{ role_label(role) }} - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+    <div class="auth-panel">
+        <p class="eyebrow">{{ role_label(role) }}</p>
+        <h1>Login {{ role_label(role) }}</h1>
+        <form method="post" class="form-grid">
+            <label>
+                Email
+                <input type="email" name="email" autocomplete="email" required>
+            </label>
+            <label>
+                Password
+                <input type="password" name="password" autocomplete="current-password" required>
+            </label>
+            <button class="button button-primary" type="submit">Masuk</button>
+        </form>
+        <div class="auth-links">
+            <a href="{{ url_for('register', role=role) }}">Daftar akun</a>
+            <a href="{{ url_for('forgot_password', role=role) }}">Lupa password</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Edit' if session else 'Buat' }} Sesi - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="page-shell compact">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Pengajar</p>
+            <h1>{{ 'Edit sesi' if session else 'Buat sesi' }}</h1>
+        </div>
+        <a class="button button-secondary" href="{{ url_for('teacher_sessions') }}">Daftar sesi</a>
+    </div>
+
+    <form method="post" class="form-panel form-grid two-columns">
+        <label>
+            Nama sesi
+            <input type="text" name="title" value="{{ session.title if session else '' }}" required>
+        </label>
+        <label>
+            Kelas
+            <input type="text" name="class_name" value="{{ session.class_name if session else '' }}">
+        </label>
+        <label>
+            Lokasi
+            <input type="text" name="location" value="{{ session.location if session else '' }}">
+        </label>
+        <label>
+            Mulai
+            <input type="datetime-local" name="start_time" value="{{ session.start_time|datetime_input if session else '' }}">
+        </label>
+        <label>
+            Selesai
+            <input type="datetime-local" name="end_time" value="{{ session.end_time|datetime_input if session else '' }}">
+        </label>
+        <label class="toggle-row">
+            <input type="checkbox" name="is_open" {% if not session or session.is_open %}checked{% endif %}>
+            <span>Sesi dibuka</span>
+        </label>
+        <label class="full-span">
+            Catatan
+            <textarea name="description" rows="4">{{ session.description if session else '' }}</textarea>
+        </label>
+        <button class="button button-primary full-span" type="submit">Simpan sesi</button>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Daftar Wajah - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="page-shell compact">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Peserta</p>
+            <h1>Daftar wajah</h1>
+        </div>
+        <a class="button button-secondary" href="{{ url_for('participant_dashboard') }}">Dashboard</a>
+    </div>
+
+    <section class="camera-layout">
+        <div class="camera-stage" data-camera="face-register">
+            <video id="faceVideo" autoplay playsinline muted></video>
+            <canvas id="faceCanvas" width="480" height="360"></canvas>
+            <div class="camera-status" id="faceStatus">Kamera belum aktif.</div>
+        </div>
+        <div class="camera-actions">
+            <button class="button button-secondary" id="startCamera" type="button">Aktifkan kamera</button>
+            <button class="button button-primary" id="captureSamples" type="button" disabled>Ambil sampel 1</button>
+            <div class="meter">
+                <span id="sampleCount">0/3 sampel</span>
+                <div><i id="sampleBar"></i></div>
+            </div>
+            <div class="result-box" id="faceResult"></div>
+        </div>
+    </section>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+<script>
+    FaceCapture.mountFaceRegistration({
+        videoId: "faceVideo",
+        canvasId: "faceCanvas",
+        statusId: "faceStatus",
+        startButtonId: "startCamera",
+        captureButtonId: "captureSamples",
+        resultId: "faceResult",
+        sampleCountId: "sampleCount",
+        sampleBarId: "sampleBar",
+        endpoint: "{{ url_for('api_register_face') }}"
+    });
+</script>
+{% endblock %}

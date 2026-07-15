@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Daftar {{ role_label(role) }} - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+    <div class="auth-panel wide">
+        <p class="eyebrow">{{ role_label(role) }}</p>
+        <h1>Daftar {{ role_label(role) }}</h1>
+        <form method="post" class="form-grid two-columns">
+            <label>
+                Nama lengkap
+                <input type="text" name="name" autocomplete="name" required>
+            </label>
+            <label>
+                Email
+                <input type="email" name="email" autocomplete="email" required>
+            </label>
+            <label>
+                Nomor HP
+                <input type="text" name="phone" autocomplete="tel">
+            </label>
+            {% if role == 'admin' %}
+            <label>
+                Kode admin
+                <input type="password" name="invite_code" required>
+            </label>
+            {% endif %}
+            <label>
+                Password
+                <input type="password" name="password" autocomplete="new-password" minlength="6" required>
+            </label>
+            <label>
+                Konfirmasi password
+                <input type="password" name="confirm_password" autocomplete="new-password" minlength="6" required>
+            </label>
+            <button class="button button-primary full-span" type="submit">Buat akun</button>
+        </form>
+        <div class="auth-links">
+            <a href="{{ url_for('login', role=role) }}">Sudah punya akun</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

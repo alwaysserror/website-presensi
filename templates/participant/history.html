@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Riwayat Peserta - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Peserta</p>
+            <h1>Riwayat presensi</h1>
+        </div>
+        <a class="button button-primary" href="{{ url_for('participant_attendance') }}">Presensi sekarang</a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Waktu</th>
+                    <th>Sesi</th>
+                    <th>Kelas</th>
+                    <th>Pengajar</th>
+                    <th>Kecocokan</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attendance in attendances %}
+                <tr>
+                    <td>{{ attendance.check_in_at|datetime_id }}</td>
+                    <td>{{ attendance.session.title }}</td>
+                    <td>{{ attendance.session.class_name or '-' }}</td>
+                    <td>{{ attendance.session.teacher.name if attendance.session.teacher else '-' }}</td>
+                    <td>{{ attendance.confidence|percent }}</td>
+                    <td><span class="status-pill open">{{ attendance.status }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="table-empty">Belum ada riwayat presensi.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

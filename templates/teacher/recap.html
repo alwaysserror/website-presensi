@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Rekap Pengajar - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Pengajar</p>
+            <h1>Rekap presensi</h1>
+        </div>
+        <a class="button button-primary" href="{{ url_for('teacher_session_create') }}">Buat sesi</a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sesi</th>
+                    <th>Kelas</th>
+                    <th>Jadwal</th>
+                    <th>Status</th>
+                    <th>Jumlah hadir</th>
+                    <th>Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session in sessions %}
+                <tr>
+                    <td>{{ session.title }}</td>
+                    <td>{{ session.class_name or '-' }}</td>
+                    <td>{{ session.start_time|datetime_id }} - {{ session.end_time|datetime_id }}</td>
+                    <td>
+                        <span class="status-pill {{ 'open' if session.is_open else 'closed' }}">
+                            {{ 'Dibuka' if session.is_open else 'Ditutup' }}
+                        </span>
+                    </td>
+                    <td>{{ session.attendances|length }}</td>
+                    <td><a class="small-link" href="{{ url_for('teacher_session_detail', session_id=session.id) }}">Buka</a></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="table-empty">Belum ada rekap presensi.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

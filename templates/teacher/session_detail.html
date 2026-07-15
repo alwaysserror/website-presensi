@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Detail Sesi - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Pengajar</p>
+            <h1>{{ session.title }}</h1>
+            <p class="muted">{{ session.class_name or 'Tanpa kelas' }}{% if session.location %} - {{ session.location }}{% endif %}</p>
+        </div>
+        <div class="button-row">
+            <a class="button button-secondary" href="{{ url_for('teacher_session_edit', session_id=session.id) }}">Edit</a>
+            <form method="post" action="{{ url_for('teacher_session_toggle', session_id=session.id) }}">
+                <button class="button button-primary" type="submit">{{ 'Tutup sesi' if session.is_open else 'Buka sesi' }}</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <article class="stat-card">
+            <span>Status</span>
+            <strong>{{ 'Dibuka' if session.is_open else 'Ditutup' }}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Peserta hadir</span>
+            <strong>{{ attendances|length }}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Jadwal</span>
+            <strong>{{ session.start_time|datetime_id }}</strong>
+        </article>
+    </div>
+
+    <section class="content-section">
+        <div class="section-heading">
+            <h2>Peserta yang presensi</h2>
+            <span>{{ session.end_time|datetime_id }}</span>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Waktu presensi</th>
+                        <th>Kecocokan</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attendance in attendances %}
+                    <tr>
+                        <td>{{ attendance.participant.name }}</td>
+                        <td>{{ attendance.participant.email }}</td>
+                        <td>{{ attendance.check_in_at|datetime_id }}</td>
+                        <td>{{ attendance.confidence|percent }}</td>
+                        <td><span class="status-pill open">{{ attendance.status }}</span></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="table-empty">Belum ada peserta yang presensi.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
+{% endblock %}

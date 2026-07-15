@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Rekap Admin - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Admin</p>
+            <h1>Rekap semua presensi</h1>
+        </div>
+        <a class="button button-secondary" href="{{ url_for('admin_sessions') }}">Kelola sesi</a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Waktu</th>
+                    <th>Peserta</th>
+                    <th>Sesi</th>
+                    <th>Pengajar</th>
+                    <th>Kecocokan</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attendance in attendances %}
+                <tr>
+                    <td>{{ attendance.check_in_at|datetime_id }}</td>
+                    <td>{{ attendance.participant.name }}</td>
+                    <td>{{ attendance.session.title }}</td>
+                    <td>{{ attendance.session.teacher.name if attendance.session.teacher else '-' }}</td>
+                    <td>{{ attendance.confidence|percent }}</td>
+                    <td><span class="status-pill open">{{ attendance.status }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="table-empty">Belum ada data presensi.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

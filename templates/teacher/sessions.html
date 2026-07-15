@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Sesi Pengajar - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Pengajar</p>
+            <h1>Sesi presensi</h1>
+        </div>
+        <a class="button button-primary" href="{{ url_for('teacher_session_create') }}">Buat sesi</a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nama sesi</th>
+                    <th>Kelas</th>
+                    <th>Jadwal</th>
+                    <th>Status</th>
+                    <th>Hadir</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session in sessions %}
+                <tr>
+
+                    <td>
+                        <div class="session-title">
+                            <span>{{ session.title }}</span>
+
+                            <a
+                                class="session-detail"
+                                href="{{ url_for('teacher_session_detail', session_id=session.id) }}">
+                                Detail
+                            </a>
+                        </div>
+                    </td>
+
+                    <td>{{ session.class_name or '-' }}</td>
+
+                    <td>
+                        {{ session.start_time|datetime_id }}
+                        -
+                        {{ session.end_time|datetime_id }}
+                    </td>
+
+                    <td>
+                        <span class="status-pill {{ 'open' if session.is_open else 'closed' }}">
+                            {{ 'Dibuka' if session.is_open else 'Ditutup' }}
+                        </span>
+                    </td>
+
+                    <td>{{ session.attendances|length }}</td>
+
+                    <td class="table-actions">
+                        <a class="small-link"
+                           href="{{ url_for('teacher_session_edit', session_id=session.id) }}">
+                            Edit
+                        </a>
+
+                        <form method="post"
+                              action="{{ url_for('teacher_session_toggle', session_id=session.id) }}">
+                            <button class="small-button" type="submit">
+                                {{ 'Tutup' if session.is_open else 'Buka' }}
+                            </button>
+                        </form>
+
+                        <form method="post"
+                              action="{{ url_for('teacher_session_delete', session_id=session.id) }}"
+                              data-confirm="Hapus sesi ini?">
+                            <button class="small-button danger" type="submit">
+                                Hapus
+                            </button>
+                        </form>
+                    </td>
+
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="table-empty">
+                        Belum ada sesi presensi.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

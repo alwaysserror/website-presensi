@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Pengajar - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Pengajar</p>
+            <h1>Halo, {{ current_user.name }}</h1>
+        </div>
+        <a class="button button-primary" href="{{ url_for('teacher_session_create') }}">Buat sesi</a>
+    </div>
+
+    <div class="stats-grid">
+        <article class="stat-card">
+            <span>Sesi terbaru</span>
+            <strong>{{ sessions|length }}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Total presensi</span>
+            <strong>{{ total_attendance }}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Status</span>
+            <strong>Aktif</strong>
+        </article>
+    </div>
+
+    <section class="content-section">
+        <div class="section-heading">
+            <h2>Sesi terbaru</h2>
+            <a href="{{ url_for('teacher_sessions') }}">Lihat semua</a>
+        </div>
+        {% if sessions %}
+            <div class="session-list">
+                {% for session in sessions %}
+                    <article class="session-card">
+                        <span class="status-pill {{ 'open' if session.is_open else 'closed' }}">
+                            {{ 'Dibuka' if session.is_open else 'Ditutup' }}
+                        </span>
+
+                        <h3>{{ session.title }}</h3>
+
+                        <p>
+                            {{ session.class_name or 'Tanpa kelas' }}
+                            - {{ session.attendances|length }} hadir
+                        </p>
+
+                        {% if session.description %}
+                            <p class="session-description">
+                                {{ session.description }}
+                            </p>
+                        {% endif %}
+
+                        <a href="{{ url_for('teacher_session_detail', session_id=session.id) }}">
+                            Detail sesi
+                        </a>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">Belum ada sesi. Buat sesi pertama untuk membuka presensi.</div>
+        {% endif %}
+    </section>
+</section>
+{% endblock %}

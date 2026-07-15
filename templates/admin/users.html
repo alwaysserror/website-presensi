@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Pengguna Admin - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Admin</p>
+            <h1>Kelola pengguna</h1>
+        </div>
+        <div class="button-row">
+            <a class="button button-secondary" href="{{ url_for('register', role='admin') }}">Daftar admin</a>
+        </div>
+    </div>
+
+    <div class="filter-tabs">
+        <a class="{{ 'active' if not selected_role else '' }}" href="{{ url_for('admin_users') }}">Semua</a>
+        {% for role in ROLE_LABELS %}
+            <a class="{{ 'active' if selected_role == role else '' }}" href="{{ url_for('admin_users', role=role) }}">{{ role_label(role) }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Data wajah</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role_label }}</td>
+                    <td>{{ 'Ada' if user.face_profile else '-' }}</td>
+                    <td>
+                        <span class="status-pill {{ 'open' if user.is_active else 'closed' }}">
+                            {{ 'Aktif' if user.is_active else 'Nonaktif' }}
+                        </span>
+                    </td>
+                    <td class="table-actions">
+                        <form method="post" action="{{ url_for('admin_user_toggle', user_id=user.id) }}">
+                            <button class="small-button" type="submit">{{ 'Nonaktifkan' if user.is_active else 'Aktifkan' }}</button>
+                        </form>
+                        <form method="post" action="{{ url_for('admin_user_delete', user_id=user.id) }}" data-confirm="Hapus pengguna ini?">
+                            <button class="small-button danger" type="submit">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="table-empty">Belum ada pengguna.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

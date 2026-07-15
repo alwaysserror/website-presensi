@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Sesi Admin - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Admin</p>
+            <h1>Semua sesi</h1>
+        </div>
+        <a class="button button-secondary" href="{{ url_for('admin_recap') }}">Lihat rekap</a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sesi</th>
+                    <th>Pengajar</th>
+                    <th>Kelas</th>
+                    <th>Status</th>
+                    <th>Hadir</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session in sessions %}
+                <tr>
+                    <td>{{ session.title }}</td>
+                    <td>{{ session.teacher.name if session.teacher else '-' }}</td>
+                    <td>{{ session.class_name or '-' }}</td>
+                    <td>
+                        <span class="status-pill {{ 'open' if session.is_open else 'closed' }}">
+                            {{ 'Dibuka' if session.is_open else 'Ditutup' }}
+                        </span>
+                    </td>
+                    <td>{{ session.attendances|length }}</td>
+                    <td class="table-actions">
+                        <form method="post" action="{{ url_for('admin_session_toggle', session_id=session.id) }}">
+                            <button class="small-button" type="submit">{{ 'Tutup' if session.is_open else 'Buka' }}</button>
+                        </form>
+                        <form method="post" action="{{ url_for('admin_session_delete', session_id=session.id) }}" data-confirm="Hapus sesi ini beserta presensinya?">
+                            <button class="small-button danger" type="submit">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="table-empty">Belum ada sesi.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

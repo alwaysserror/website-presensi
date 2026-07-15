@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Admin - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Admin</p>
+            <h1>Ringkasan sistem</h1>
+        </div>
+        <a class="button button-primary" href="{{ url_for('admin_users') }}">Kelola pengguna</a>
+    </div>
+
+    <div class="stats-grid">
+        <article class="stat-card">
+            <span>Total pengguna</span>
+            <strong>{{ total_users }}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Total sesi</span>
+            <strong>{{ total_sessions }}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Total presensi</span>
+            <strong>{{ total_attendance }}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Presensi hari ini</span>
+            <strong>{{ attendance_today }}</strong>
+        </article>
+    </div>
+
+    <section class="quick-grid">
+        <a class="quick-link" href="{{ url_for('admin_users') }}">
+            <span>Pengguna</span>
+            <strong>Aktif/nonaktifkan akun dan hapus akun kosong.</strong>
+        </a>
+        <a class="quick-link" href="{{ url_for('admin_sessions') }}">
+            <span>Sesi</span>
+            <strong>Buka, tutup, atau hapus sesi presensi.</strong>
+        </a>
+        <a class="quick-link" href="{{ url_for('admin_recap') }}">
+            <span>Rekap</span>
+            <strong>Lihat seluruh catatan presensi peserta.</strong>
+        </a>
+    </section>
+</section>
+{% endblock %}

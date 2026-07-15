@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Presensi Wajah - Presensi Face{% endblock %}
+
+{% block content %}
+<section class="page-shell compact">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Peserta</p>
+            <h1>Presensi wajah</h1>
+        </div>
+        <a class="button button-secondary" href="{{ url_for('participant_history') }}">Riwayat</a>
+    </div>
+
+    {% if not current_user.face_profile %}
+        <div class="empty-state with-action">
+            Data wajah belum tersedia.
+            <a class="button button-primary" href="{{ url_for('participant_face') }}">Daftarkan wajah</a>
+        </div>
+    {% else %}
+        <section class="camera-layout">
+            <div class="camera-stage" data-camera="attendance">
+                <video id="attendanceVideo" autoplay playsinline muted></video>
+                <canvas id="attendanceCanvas" width="480" height="360"></canvas>
+                <div class="camera-status" id="attendanceStatus">Kamera belum aktif.</div>
+            </div>
+            <div class="camera-actions">
+                <label>
+                    Sesi presensi
+                    <select id="sessionSelect" {% if not sessions %}disabled{% endif %}>
+                        {% for session in sessions %}
+                            <option value="{{ session.id }}">{{ session.title }} - {{ session.class_name or 'Umum' }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <button class="button button-secondary" id="startAttendanceCamera" type="button">Aktifkan kamera</button>
+                <button class="button button-primary" id="submitAttendance" type="button" {% if not sessions %}disabled{% endif %}>Presensi</button>
+                <div class="result-box" id="attendanceResult">
+                    {% if not sessions %}Belum ada sesi yang bisa dipilih.{% endif %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% if current_user.face_profile %}
+<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+<script>
+    FaceCapture.mountAttendance({
+        videoId: "attendanceVideo",
+        canvasId: "attendanceCanvas",
+        statusId: "attendanceStatus",
+        startButtonId: "startAttendanceCamera",
+        submitButtonId: "submitAttendance",
+        resultId: "attendanceResult",
+        sessionSelectId: "sessionSelect",
+        endpoint: "{{ url_for('api_attendance_check_in') }}"
+    });
+</script>
+{% endif %}
+{% endblock %}
