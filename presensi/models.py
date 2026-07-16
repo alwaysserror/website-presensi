@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -99,13 +99,17 @@ class PresenceSession(db.Model):
     )
 
     def accepts_attendance(self):
-        now = datetime.now()
+        now = datetime.utcnow() + timedelta(hours=7)
+
         if not self.is_open:
             return False
+
         if self.start_time and now < self.start_time:
             return False
+
         if self.end_time and now > self.end_time:
             return False
+
         return True
 
 
