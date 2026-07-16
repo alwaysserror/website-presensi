@@ -13,7 +13,7 @@ ALLOWED_ROLES = tuple(ROLE_LABELS.keys())
 def build_database_uri():
     database_url = os.getenv("DATABASE_URL")
     if database_url:
-        return database_url
+        return database_url.replace("mysql://", "mysql+pymysql://", 1)
 
     user = os.getenv("DB_USER", "root")
     password = os.getenv("DB_PASSWORD", "")
