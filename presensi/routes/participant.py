@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import jsonify, render_template, request
 from flask_login import current_user
 
@@ -18,11 +20,39 @@ def register_participant_routes(app):
     def participant_dashboard():
         open_sessions = (
             PresenceSession.query.filter_by(is_open=True)
-            .order_by(PresenceSession.start_time.desc(), PresenceSession.created_at.desc())
+            .order_by(
+                PresenceSession.start_time.desc(),
+                PresenceSession.created_at.desc(),
+            )
             .all()
         )
-        available_sessions = [session for session in open_sessions if session.accepts_attendance()]
-        attendance_count = Attendance.query.filter_by(participant_id=current_user.id).count()
+
+        print("================================")
+        print("NOW:", datetime.now())
+
+        for s in open_sessions:
+            print(
+                "SESSION:",
+                s.id,
+                s.title,
+                s.is_open,
+                s.start_time,
+                s.end_time,
+                s.accepts_attendance(),
+            )
+
+        available_sessions = [
+            session for session in open_sessions
+            if session.accepts_attendance()
+        ]
+
+        print("AVAILABLE:", len(available_sessions))
+        print("================================")
+
+        attendance_count = Attendance.query.filter_by(
+            participant_id=current_user.id
+        ).count()
+
         return render_template(
             "participant/dashboard.html",
             available_sessions=available_sessions,
