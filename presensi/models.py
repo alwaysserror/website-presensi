@@ -2,6 +2,7 @@ from datetime import datetime
 
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
+from sqlalchemy.dialects.mysql import LONGTEXT
 
 from .config import ROLE_LABELS
 from .extensions import db, login_manager
@@ -55,7 +56,7 @@ class User(UserMixin, db.Model):
 class FaceProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False, unique=True)
-    model_xml = db.Column("descriptor_json", db.Text, nullable=False)
+    model_xml = db.Column("descriptor_json", LONGTEXT, nullable=False)
     samples_count = db.Column(db.Integer, nullable=False, default=0)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(
